@@ -20,8 +20,12 @@ import {
   FolderOpen,
   Upload,
   Share,
-  Check
+  Check,
+  QrCode,
+  Calendar,
+  X
 } from "lucide-react";
+import QRCode from "qrcode";
 import { cn } from "@/lib/utils";
 
 interface FileData {
@@ -40,6 +44,9 @@ export default function Home() {
   const [copiedUrls, setCopiedUrls] = useState<Set<string>>(new Set());
   const [previewFile, setPreviewFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [showQRModal, setShowQRModal] = useState<boolean>(false);
+  const [selectedFile, setSelectedFile] = useState<FileData | null>(null);
+  const [qrCodeUrl, setQrCodeUrl] = useState<string>("");
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -200,6 +207,37 @@ export default function Home() {
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  const getExpiryDate = () => {
+    const now = new Date();
+    now.setDate(now.getDate() + 7); // Files expire in 7 days
+    return now.toLocaleDateString();
+  };
+
+  const generateQRCode = async (shareUrl: string) => {
+    try {
+      const fullUrl = `${window.location.origin}/preview/${shareUrl}`;
+      const qrCodeDataUrl = await QRCode.toDataURL(fullUrl, {
+        width: 256,
+        margin: 2,
+        color: {
+          dark: '#5865F2',
+          light: '#FFFFFF'
+        }
+      });
+      return qrCodeDataUrl;
+    } catch (error) {
+      console.error('Failed to generate QR code:', error);
+      return '';
+    }
+  };
+
+  const openQRModal = async (file: FileData) => {
+    setSelectedFile(file);
+    const qrCode = await generateQRCode(file.shareUrl);
+    setQrCodeUrl(qrCode);
+    setShowQRModal(true);
   };
 
   const formatTimeAgo = (dateString: string) => {
@@ -524,18 +562,29 @@ export default function Home() {
                               className="flex-1 text-overflow-ellipsis text-xs sm:text-sm"
                               data-testid={`input-share-url-${file.id}`}
                             />
-                            <Button
-                              onClick={() => copyToClipboard(file.shareUrl, file.id)}
-                              className="flex items-center justify-center space-x-2 flex-shrink-0 text-xs sm:text-sm"
-                              data-testid={`button-copy-${file.id}`}
-                            >
-                              {copiedUrls.has(file.id) ? (
-                                <Check className="h-3 w-3 sm:h-4 sm:w-4" />
-                              ) : (
-                                <Copy className="h-3 w-3 sm:h-4 sm:w-4" />
-                              )}
-                              <span>{copiedUrls.has(file.id) ? "Copied!" : "Copy"}</span>
-                            </Button>
+                            <div className="flex gap-1 sm:gap-2">
+                              <Button
+                                onClick={() => copyToClipboard(file.shareUrl, file.id)}
+                                className="flex items-center justify-center space-x-1 sm:space-x-2 flex-1 text-xs sm:text-sm"
+                                data-testid={`button-copy-${file.id}`}
+                              >
+                                {copiedUrls.has(file.id) ? (
+                                  <Check className="h-3 w-3 sm:h-4 sm:w-4" />
+                                ) : (
+                                  <Copy className="h-3 w-3 sm:h-4 sm:w-4" />
+                                )}
+                                <span className="hidden sm:inline">{copiedUrls.has(file.id) ? "Copied!" : "Copy"}</span>
+                              </Button>
+                              <Button
+                                onClick={() => openQRModal(file)}
+                                variant="outline"
+                                className="flex items-center justify-center space-x-1 sm:space-x-2 flex-1 text-xs sm:text-sm"
+                                data-testid={`button-qr-${file.id}`}
+                              >
+                                <QrCode className="h-3 w-3 sm:h-4 sm:w-4" />
+                                <span className="hidden sm:inline">QR</span>
+                              </Button>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -553,6 +602,61 @@ export default function Home() {
             Made by <span className="font-medium text-foreground">Altech Technologies</span>
           </p>
         </footer>
+
+        {/* QR Code Modal */}
+        {showQRModal && selectedFile && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4" onClick={() => setShowQRModal(false)}>
+            <div className="bg-background rounded-lg p-6 max-w-sm w-full mx-4" onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-foreground">Share File</h3>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowQRModal(false)}
+                  className="h-8 w-8 p-0"
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              
+              <div className="text-center space-y-4">
+                <div className="p-4 bg-white rounded-lg mx-auto inline-block">
+                  {qrCodeUrl && (
+                    <img 
+                      src={qrCodeUrl} 
+                      alt="QR Code" 
+                      className="w-48 h-48 mx-auto"
+                    />
+                  )}
+                </div>
+                
+                <div className="space-y-2">
+                  <h4 className="font-medium text-foreground text-sm">{selectedFile.originalName}</h4>
+                  <p className="text-xs text-muted-foreground flex items-center justify-center gap-1">
+                    <Calendar className="h-3 w-3" />
+                    Expires: {getExpiryDate()}
+                  </p>
+                </div>
+                
+                <div className="pt-2 border-t">
+                  <p className="text-xs text-muted-foreground mb-3">
+                    Scan with your phone to download
+                  </p>
+                  <Button
+                    onClick={() => copyToClipboard(selectedFile.shareUrl, selectedFile.id)}
+                    className="w-full text-sm"
+                  >
+                    {copiedUrls.has(selectedFile.id) ? (
+                      <><Check className="h-4 w-4 mr-2" />Copied!</>
+                    ) : (
+                      <><Copy className="h-4 w-4 mr-2" />Copy Link</>
+                    )}
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
