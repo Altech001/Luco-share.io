@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp, integer } from "drizzle-orm/pg-core";
+import { pgTable, text, varchar, timestamp, integer, boolean } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -17,6 +17,7 @@ export const files = pgTable("files", {
   size: integer("size").notNull(),
   shareUrl: text("share_url").notNull().unique(),
   uploadedAt: timestamp("uploaded_at").defaultNow().notNull(),
+  isPrivate: boolean("is_private").default(false).notNull(),
 });
 
 export const insertUserSchema = createInsertSchema(users).pick({

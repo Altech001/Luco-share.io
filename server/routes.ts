@@ -23,12 +23,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const shareUrl = randomUUID();
+      const isPrivate = req.body.isPrivate === 'true';
       const fileData = {
         filename: req.file.filename || req.file.originalname || "unknown",
         originalName: req.file.originalname || "unknown",
         mimetype: req.file.mimetype,
         size: req.file.size,
         shareUrl: shareUrl,
+        isPrivate: isPrivate,
       };
 
       // Validate file data
@@ -55,10 +57,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  // Get all files
+  // Get public files only
   app.get("/api/files", async (req, res) => {
     try {
-      const files = await storage.getAllFiles();
+      const files = await storage.getPublicFiles();
       res.json({ 
         files: files.map(file => ({
           ...file,

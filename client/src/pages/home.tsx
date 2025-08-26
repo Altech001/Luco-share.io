@@ -23,7 +23,12 @@ import {
   Check,
   QrCode,
   Calendar,
-  X
+  X,
+  Lock,
+  Unlock,
+  MessageCircle,
+  Send,
+  Edit3
 } from "lucide-react";
 import QRCode from "qrcode";
 import { cn } from "@/lib/utils";
@@ -36,6 +41,7 @@ interface FileData {
   size: number;
   shareUrl: string;
   uploadedAt: string;
+  isPrivate?: boolean;
 }
 
 export default function Home() {
@@ -47,6 +53,10 @@ export default function Home() {
   const [showQRModal, setShowQRModal] = useState<boolean>(false);
   const [selectedFile, setSelectedFile] = useState<FileData | null>(null);
   const [qrCodeUrl, setQrCodeUrl] = useState<string>("");
+  const [isPrivate, setIsPrivate] = useState<boolean>(false);
+  const [comments, setComments] = useState<Array<{id: string, text: string, author: string, timestamp: string}>>([]);
+  const [newComment, setNewComment] = useState<string>("");
+  const [userNickname, setUserNickname] = useState<string>("");
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -57,12 +67,11 @@ export default function Home() {
 
   // Upload mutation
   const uploadMutation = useMutation({
-    mutationFn: async (file: File) => {
-      const formData = new FormData();
-      formData.append("file", file);
+    mutationFn: async (formData: FormData) => {
+      const file = formData.get("file") as File;
       
       setUploadProgress(0);
-      setUploadingFileName(file.name);
+      setUploadingFileName(file?.name || "File");
       
       // Simulate progress updates
       const progressInterval = setInterval(() => {
@@ -146,8 +155,12 @@ export default function Home() {
   
   const handleUpload = () => {
     if (previewFile) {
-      uploadMutation.mutate(previewFile);
+      const formData = new FormData();
+      formData.append('file', previewFile);
+      formData.append('isPrivate', isPrivate.toString());
+      uploadMutation.mutate(formData);
       setPreviewFile(null);
+      setIsPrivate(false);
       if (previewUrl) {
         URL.revokeObjectURL(previewUrl);
         setPreviewUrl(null);
@@ -240,6 +253,32 @@ export default function Home() {
     setShowQRModal(true);
   };
 
+  // Comment system functions
+  const addComment = () => {
+    if (!newComment.trim() || !userNickname.trim()) return;
+    
+    const comment = {
+      id: Date.now().toString(),
+      text: newComment.trim(),
+      author: userNickname.trim(),
+      timestamp: new Date().toISOString()
+    };
+    
+    setComments(prev => [...prev, comment]);
+    setNewComment("");
+  };
+
+  const formatCommentTime = (timestamp: string) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
+    
+    if (diffInMinutes < 1) return "Just now";
+    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
+    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
+    return `${Math.floor(diffInMinutes / 1440)}d ago`;
+  };
+
   const formatTimeAgo = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
@@ -301,6 +340,69 @@ export default function Home() {
             </div>
           </CardContent>
         </Card>
+        
+        {/* Chat/Request Section for Desktop */}
+        <Card className="mt-6">
+          <CardContent className="p-6">
+            <div className="flex items-center space-x-2 mb-4">
+              <MessageCircle className="h-5 w-5 text-primary" />
+              <h2 className="text-lg font-semibold text-foreground">Requests & Chat</h2>
+            </div>
+            
+            {/* Nickname Input */}
+            {!userNickname && (
+              <div className="mb-4">
+                <Input
+                  placeholder="Enter your nickname to chat..."
+                  value={userNickname}
+                  onChange={(e) => setUserNickname(e.target.value)}
+                  className="text-sm"
+                />
+              </div>
+            )}
+            
+            {userNickname && (
+              <>
+                {/* Comments Display */}
+                <div className="max-h-60 overflow-y-auto mb-4 space-y-3">
+                  {comments.length === 0 ? (
+                    <p className="text-sm text-muted-foreground text-center py-8">
+                      No requests yet. Start a conversation!
+                    </p>
+                  ) : (
+                    comments.map((comment) => (
+                      <div key={comment.id} className="bg-background rounded-lg p-3">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="font-medium text-primary">{comment.author}</span>
+                          <span className="text-xs text-muted-foreground">{formatCommentTime(comment.timestamp)}</span>
+                        </div>
+                        <p className="text-sm text-foreground">{comment.text}</p>
+                      </div>
+                    ))
+                  )}
+                </div>
+                
+                {/* Add Comment */}
+                <div className="flex gap-3">
+                  <Input
+                    placeholder="Type a request or message..."
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && addComment()}
+                    className="flex-1"
+                  />
+                  <Button
+                    onClick={addComment}
+                    disabled={!newComment.trim()}
+                    className="px-4"
+                  >
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </div>
+              </>
+            )}
+          </CardContent>
+        </Card>
       </div>
 
       {/* Main Content */}
@@ -342,6 +444,68 @@ export default function Home() {
                   <h3 className="font-medium text-foreground mb-1 text-sm">3. Download</h3>
                   <p className="text-xs text-muted-foreground">Download via link</p>
                 </div>
+              </div>
+              
+              {/* Chat/Request Section for Mobile */}
+              <div className="mt-6">
+                <div className="flex items-center space-x-2 mb-3">
+                  <MessageCircle className="h-4 w-4 text-primary" />
+                  <h3 className="text-base font-semibold text-foreground">Requests</h3>
+                </div>
+                
+                {/* Nickname Input */}
+                {!userNickname && (
+                  <div className="mb-3">
+                    <Input
+                      placeholder="Enter nickname to chat..."
+                      value={userNickname}
+                      onChange={(e) => setUserNickname(e.target.value)}
+                      className="text-sm"
+                    />
+                  </div>
+                )}
+                
+                {userNickname && (
+                  <>
+                    {/* Comments Display */}
+                    <div className="max-h-32 overflow-y-auto mb-3 space-y-2">
+                      {comments.length === 0 ? (
+                        <p className="text-xs text-muted-foreground text-center py-3">
+                          No requests yet!
+                        </p>
+                      ) : (
+                        comments.map((comment) => (
+                          <div key={comment.id} className="bg-background rounded p-2 text-xs">
+                            <div className="flex justify-between mb-1">
+                              <span className="font-medium text-primary">{comment.author}</span>
+                              <span className="text-muted-foreground">{formatCommentTime(comment.timestamp)}</span>
+                            </div>
+                            <p className="text-foreground">{comment.text}</p>
+                          </div>
+                        ))
+                      )}
+                    </div>
+                    
+                    {/* Add Comment */}
+                    <div className="flex gap-2">
+                      <Input
+                        placeholder="Type a message..."
+                        value={newComment}
+                        onChange={(e) => setNewComment(e.target.value)}
+                        onKeyPress={(e) => e.key === 'Enter' && addComment()}
+                        className="text-xs flex-1"
+                      />
+                      <Button
+                        onClick={addComment}
+                        size="sm"
+                        disabled={!newComment.trim()}
+                        className="px-2"
+                      >
+                        <Send className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </>
+                )}
               </div>
             </CardContent>
           </Card>
@@ -433,6 +597,21 @@ export default function Home() {
                             )}
                           </div>
                           
+                          {/* Privacy Toggle */}
+                          <div className="flex items-center justify-center space-x-2 p-3 bg-muted rounded-lg">
+                            <Button
+                              onClick={() => setIsPrivate(!isPrivate)}
+                              variant="ghost"
+                              className="flex items-center space-x-2 text-sm"
+                            >
+                              {isPrivate ? <Lock className="h-4 w-4" /> : <Unlock className="h-4 w-4" />}
+                              <span>{isPrivate ? "Private" : "Public"}</span>
+                            </Button>
+                            <span className="text-xs text-muted-foreground">
+                              {isPrivate ? "Only you can access via link" : "Anyone can view"}
+                            </span>
+                          </div>
+                          
                           {/* Action Buttons */}
                           <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
                             <Button 
@@ -518,9 +697,12 @@ export default function Home() {
                               {getFileIcon(file.mimetype)}
                             </div>
                             <div className="min-w-0 flex-1">
-                              <h3 className="font-medium text-foreground text-overflow-ellipsis text-sm sm:text-base" data-testid={`text-filename-${file.id}`} title={file.originalName}>
-                                {file.originalName}
-                              </h3>
+                              <div className="flex items-center gap-2">
+                                <h3 className="font-medium text-foreground text-overflow-ellipsis text-sm sm:text-base" data-testid={`text-filename-${file.id}`} title={file.originalName}>
+                                  {file.originalName}
+                                </h3>
+                                {file.isPrivate && <Lock className="h-3 w-3 text-muted-foreground" />}
+                              </div>
                               <p className="text-xs sm:text-sm text-muted-foreground">
                                 <span data-testid={`text-filesize-${file.id}`}>{formatFileSize(file.size)}</span> • 
                                 <span data-testid={`text-uploaded-time-${file.id}`}> {formatTimeAgo(file.uploadedAt)}</span>

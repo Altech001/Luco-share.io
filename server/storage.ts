@@ -11,6 +11,7 @@ export interface IStorage {
   getFileByShareUrl(shareUrl: string): Promise<File | undefined>;
   getFileById(id: string): Promise<File | undefined>;
   getAllFiles(): Promise<File[]>;
+  getPublicFiles(): Promise<File[]>;
   deleteFile(id: string): Promise<boolean>;
 }
 
@@ -47,7 +48,8 @@ export class MemStorage implements IStorage {
     const file: File = { 
       ...insertFile, 
       id, 
-      uploadedAt: new Date() 
+      uploadedAt: new Date(),
+      isPrivate: insertFile.isPrivate ?? false
     };
     this.files.set(id, file);
     return file;
@@ -67,6 +69,12 @@ export class MemStorage implements IStorage {
     return Array.from(this.files.values()).sort(
       (a, b) => b.uploadedAt.getTime() - a.uploadedAt.getTime()
     );
+  }
+
+  async getPublicFiles(): Promise<File[]> {
+    return Array.from(this.files.values())
+      .filter(file => !file.isPrivate)
+      .sort((a, b) => b.uploadedAt.getTime() - a.uploadedAt.getTime());
   }
 
   async deleteFile(id: string): Promise<boolean> {
