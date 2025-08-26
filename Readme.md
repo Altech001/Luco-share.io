@@ -1,4 +1,4 @@
-# File Upload Application
+# Luco File Upload Application
 
 ## Overview
 
@@ -48,3 +48,6 @@ Preferred communication style: Simple, everyday language.
 - **Component Architecture**: Modular UI components with consistent design system
 - **API Layer**: Centralized API client with error handling and credential management
 - **File Management**: Unique share URLs for file access with metadata tracking
+
+
+> Made with Love from Altech

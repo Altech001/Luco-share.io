@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import QRCode from "qrcode";
 import { cn } from "@/lib/utils";
+import UserLocation from "@/components/ui/widgets/userlocation";
 
 interface FileData {
   id: string;
@@ -301,20 +302,20 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background flex">
       {/* Sidebar - How it works */}
-      <div className="sidebar">
+      <div className="sidebar mb-10">
         <div className="flex items-center space-x-3 mb-8">
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
             <CloudUpload className="h-4 w-4 text-primary-foreground" />
           </div>
           <div>
             <h1 className="text-xl font-bold text-foreground">LucoShare.io</h1>
-            <p className="text-muted-foreground text-sm">Safe sharing of files</p>
+            <p className="text-muted-foreground text-sm">Transfer files smoothly and no files stored</p>
           </div>
         </div>
 
         <Card>
           <CardContent className="p-6">
-            <h2 className="text-lg font-semibold text-foreground mb-6">How it works</h2>
+            <h2 className="text-lg font-semibold text-foreground mb-4">How it works</h2>
             <div className="space-y-6">
               <div className="text-center">
                 <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-3">
@@ -340,69 +341,6 @@ export default function Home() {
             </div>
           </CardContent>
         </Card>
-        
-        {/* Chat/Request Section for Desktop */}
-        <Card className="mt-6">
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-2 mb-4">
-              <MessageCircle className="h-5 w-5 text-primary" />
-              <h2 className="text-lg font-semibold text-foreground">Requests & Chat</h2>
-            </div>
-            
-            {/* Nickname Input */}
-            {!userNickname && (
-              <div className="mb-4">
-                <Input
-                  placeholder="Enter your nickname to chat..."
-                  value={userNickname}
-                  onChange={(e) => setUserNickname(e.target.value)}
-                  className="text-sm"
-                />
-              </div>
-            )}
-            
-            {userNickname && (
-              <>
-                {/* Comments Display */}
-                <div className="max-h-60 overflow-y-auto mb-4 space-y-3">
-                  {comments.length === 0 ? (
-                    <p className="text-sm text-muted-foreground text-center py-8">
-                      No requests yet. Start a conversation!
-                    </p>
-                  ) : (
-                    comments.map((comment) => (
-                      <div key={comment.id} className="bg-background rounded-lg p-3">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="font-medium text-primary">{comment.author}</span>
-                          <span className="text-xs text-muted-foreground">{formatCommentTime(comment.timestamp)}</span>
-                        </div>
-                        <p className="text-sm text-foreground">{comment.text}</p>
-                      </div>
-                    ))
-                  )}
-                </div>
-                
-                {/* Add Comment */}
-                <div className="flex gap-3">
-                  <Input
-                    placeholder="Type a request or message..."
-                    value={newComment}
-                    onChange={(e) => setNewComment(e.target.value)}
-                    onKeyPress={(e) => e.key === 'Enter' && addComment()}
-                    className="flex-1"
-                  />
-                  <Button
-                    onClick={addComment}
-                    disabled={!newComment.trim()}
-                    className="px-4"
-                  >
-                    <Send className="h-4 w-4" />
-                  </Button>
-                </div>
-              </>
-            )}
-          </CardContent>
-        </Card>
       </div>
 
       {/* Main Content */}
@@ -415,7 +353,7 @@ export default function Home() {
             </div>
             <div>
               <h1 className="text-xl font-bold text-foreground">LucoShare.io</h1>
-              <p className="text-muted-foreground text-sm">Safe sharing of files</p>
+              <p className="text-muted-foreground text-sm">Transfer files smoothly and no files stored</p>
             </div>
           </div>
 
@@ -514,16 +452,16 @@ export default function Home() {
         <main className="w-full mx-auto px-2 py-4 sm:px-4 sm:py-8 sm:max-w-4xl">
           {/* Upload Section */}
           <section className="mb-6 sm:mb-8">
-            <Card>
+            <Card className="border-none shadow-none">
               <CardContent className="p-4 sm:p-8">
                 
                 {/* Drag Drop Zone */}
                 {!previewFile ? (
-                  <div className="flex flex-col items-center">
+                  <div className="flex flex-col items-center ">
                     <div
                       {...getRootProps()}
                       className={cn(
-                        "circular-dropzone mx-auto cursor-pointer",
+                        "circular-dropzone mx-auto  cursor-pointer",
                         isDragActive && "drag-active"
                       )}
                       data-testid="drop-zone"
@@ -535,17 +473,17 @@ export default function Home() {
                             <div className="dropzone-icon">
                               <File className="w-12 h-12" />
                             </div>
-                            <div className="drag-active-text">Drop it</div>
+                            <div className="drag-active-text text-base text-black">Luco It</div>
                           </>
                         ) : (
                           <>
                             <div className="dropzone-icon">
                               <FolderOpen className="w-12 h-12" />
                             </div>
-                            <div className="default-text">
+                            <div className="default-text sm:text-xs md:text-sm">
                               Drag and drop your project output folder here.
                             </div>
-                            <div className="browse-text">
+                            <div className="browse-text text-blue-500 sm:text-xs md:text-sm">
                               Or, browse to upload.
                             </div>
                           </>
@@ -661,7 +599,7 @@ export default function Home() {
 
           {/* Uploaded Files Section */}
           <section className="mb-6 sm:mb-8">
-            <Card>
+            <Card className="border-t border-dashed shadow-none">
               <CardContent className="p-4 sm:p-6">
                 <h2 className="text-lg sm:text-xl font-semibold text-foreground mb-4 sm:mb-6">Uploaded Files</h2>
                 
@@ -690,7 +628,7 @@ export default function Home() {
                 ) : (
                   <div className="space-y-4" data-testid="files-list">
                     {files.map((file) => (
-                      <div key={file.id} className="bg-secondary rounded-lg p-3 sm:p-4 fade-in" data-testid={`card-file-${file.id}`}>
+                      <div key={file.id} className="border border-dashed rounded-lg p-3 sm:p-4 fade-in" data-testid={`card-file-${file.id}`}>
                         <div className="flex items-center justify-between gap-2 sm:gap-4">
                           <div className="flex items-center space-x-3 sm:space-x-4 flex-1 min-w-0">
                             <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary rounded-lg flex items-center justify-center text-primary-foreground flex-shrink-0">
@@ -781,7 +719,7 @@ export default function Home() {
         {/* Footer */}
         <footer className="text-center py-6 border-t border-border mt-8">
           <p className="text-sm text-muted-foreground">
-            Made by <span className="font-medium text-foreground">Altech Technologies</span>
+            Made by <span className="font-medium text-foreground">Altech</span>
           </p>
         </footer>
 
@@ -806,7 +744,7 @@ export default function Home() {
                   {qrCodeUrl && (
                     <img 
                       src={qrCodeUrl} 
-                      alt="QR Code" 
+                      alt="Luco QR Code" 
                       className="w-48 h-48 mx-auto"
                     />
                   )}
@@ -839,6 +777,73 @@ export default function Home() {
             </div>
           </div>
         )}
+      </div>
+      <div className="sidebar-desktop hidden lg:block w-80 p-4 sticky">
+           {/* Chat/Request Section for Desktop */}
+        <Card className="mt-6">
+          <CardContent className="p-6">
+            <div className="flex items-center space-x-2 mb-4">
+              <MessageCircle className="h-5 w-5 text-primary" />
+              <h2 className="text-lg font-semibold text-foreground">Requests & Chat</h2>
+            </div>
+            
+            {/* Nickname Input */}
+            {!userNickname && (
+              <div className="mb-4">
+                <Input
+                  placeholder="Enter your nickname to chat..."
+                  value={userNickname}
+                  onChange={(e) => setUserNickname(e.target.value)}
+                  className="text-sm"
+                />
+              </div>
+            )}
+            
+            {userNickname && (
+              <>
+                {/* Comments Display */}
+                <div className="max-h-60 overflow-y-auto mb-4 space-y-3">
+                  {comments.length === 0 ? (
+                    <p className="text-sm text-muted-foreground text-center py-8">
+                      No requests yet. Start a conversation!
+                    </p>
+                  ) : (
+                    comments.map((comment) => (
+                      <div key={comment.id} className="bg-background rounded-lg p-3">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="font-medium text-primary">{comment.author}</span>
+                          <span className="text-xs text-muted-foreground">{formatCommentTime(comment.timestamp)}</span>
+                        </div>
+                        <p className="text-sm text-foreground">{comment.text}</p>
+                      </div>
+                    ))
+                  )}
+                </div>
+                
+                {/* Add Comment */}
+                <div className="flex gap-3">
+                  <Input
+                    placeholder="Type a request or message..."
+                    value={newComment}
+                    onChange={(e) => setNewComment(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && addComment()}
+                    className="flex-1"
+                  />
+                  <Button
+                    onClick={addComment}
+                    disabled={!newComment.trim()}
+                    className="px-4"
+                  >
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </div>
+              </>
+            )}
+          </CardContent>
+        </Card>
+      <div className="sidebar-desktop p-6">
+      <UserLocation />
+    </div>
       </div>
     </div>
   );
