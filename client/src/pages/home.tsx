@@ -222,290 +222,287 @@ export default function Home() {
   const files = filesData?.files || [];
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="bg-card border-b border-border">
-        <div className="max-w-4xl mx-auto px-4 py-6">
-          <div className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-              <CloudUpload className="h-4 w-4 text-primary-foreground" />
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">FileShare</h1>
-              <p className="text-muted-foreground text-sm">Secure file transfer made simple</p>
-            </div>
+    <div className="min-h-screen bg-background flex">
+      {/* Sidebar - How it works */}
+      <div className="sidebar">
+        <div className="flex items-center space-x-3 mb-8">
+          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+            <CloudUpload className="h-4 w-4 text-primary-foreground" />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold text-foreground">FileShare</h1>
+            <p className="text-muted-foreground text-sm">Secure file transfer</p>
           </div>
         </div>
-      </header>
 
-      <main className="max-w-4xl mx-auto px-4 py-8">
-        {/* Upload Section */}
-        <section className="mb-8">
-          <Card>
-            <CardContent className="p-8">
-              <h2 className="text-xl font-semibold text-foreground mb-6">Upload Files</h2>
-              
-              {/* Drag Drop Zone */}
-              {!previewFile ? (
-                <div className="flex flex-col items-center">
-                  <div
-                    {...getRootProps()}
-                    className={cn(
-                      "circular-dropzone mx-auto cursor-pointer",
-                      isDragActive && "drag-active"
-                    )}
-                    data-testid="drop-zone"
-                  >
-                    <input {...getInputProps()} data-testid="file-input" />
-                    <div className="dropzone-content">
-                      {isDragActive ? (
-                        <>
-                          <div className="dropzone-icon">
-                            <File className="w-12 h-12" />
-                          </div>
-                          <div className="drag-active-text">Drop it</div>
-                        </>
-                      ) : (
-                        <>
-                          <div className="dropzone-icon">
-                            <FolderOpen className="w-12 h-12" />
-                          </div>
-                          <div className="default-text">
-                            Drag and drop your files here.
-                          </div>
-                          <div className="browse-text">
-                            Or, browse to upload.
-                          </div>
-                        </>
+        <Card>
+          <CardContent className="p-6">
+            <h2 className="text-lg font-semibold text-foreground mb-6">How it works</h2>
+            <div className="space-y-6">
+              <div className="text-center">
+                <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Upload className="h-6 w-6 text-primary-foreground" />
+                </div>
+                <h3 className="font-medium text-foreground mb-2">1. Upload</h3>
+                <p className="text-sm text-muted-foreground">Drag and drop or select files to upload</p>
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Share className="h-6 w-6 text-primary-foreground" />
+                </div>
+                <h3 className="font-medium text-foreground mb-2">2. Share</h3>
+                <p className="text-sm text-muted-foreground">Get a unique link for each uploaded file</p>
+              </div>
+              <div className="text-center">
+                <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-3">
+                  <Download className="h-6 w-6 text-primary-foreground" />
+                </div>
+                <h3 className="font-medium text-foreground mb-2">3. Download</h3>
+                <p className="text-sm text-muted-foreground">Recipients can download using the shared link</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Main Content */}
+      <div className="main-content flex-1">
+        <main className="max-w-4xl mx-auto px-4 py-8">
+          {/* Upload Section */}
+          <section className="mb-8">
+            <Card>
+              <CardContent className="p-8">
+                
+                {/* Drag Drop Zone */}
+                {!previewFile ? (
+                  <div className="flex flex-col items-center">
+                    <div
+                      {...getRootProps()}
+                      className={cn(
+                        "circular-dropzone mx-auto cursor-pointer",
+                        isDragActive && "drag-active"
                       )}
+                      data-testid="drop-zone"
+                    >
+                      <input {...getInputProps()} data-testid="file-input" />
+                      <div className="dropzone-content">
+                        {isDragActive ? (
+                          <>
+                            <div className="dropzone-icon">
+                              <File className="w-12 h-12" />
+                            </div>
+                            <div className="drag-active-text">Drop it</div>
+                          </>
+                        ) : (
+                          <>
+                            <div className="dropzone-icon">
+                              <FolderOpen className="w-12 h-12" />
+                            </div>
+                            <div className="default-text">
+                              Drag and drop your project output folder here.
+                            </div>
+                            <div className="browse-text">
+                              Or, browse to upload.
+                            </div>
+                          </>
+                        )}
+                      </div>
+                    </div>
+                    <div className="mt-8 text-center">
+                      <h3 className="text-3xl font-bold mb-2 text-foreground">Drag & drop. It's online.</h3>
+                      <p className="text-muted-foreground">Maximum file size: 100MB</p>
                     </div>
                   </div>
-                  <div className="mt-8">
-                    <h3 className="text-3xl font-bold text-center mb-2">Drag & drop. It's online.</h3>
-                    <p className="text-center text-muted-foreground">Maximum file size: 100MB</p>
-                  </div>
-                </div>
-              ) : (
-                /* File Preview */
-                <div className="max-w-md mx-auto">
-                  <Card>
-                    <CardContent className="p-6">
-                      <div className="text-center mb-6">
-                        <h3 className="text-lg font-semibold text-foreground mb-2">File Preview</h3>
-                        <p className="text-sm text-muted-foreground">Review your file before uploading</p>
-                      </div>
-                      
-                      <div className="space-y-4">
-                        {/* Preview Content */}
-                        <div className="bg-secondary rounded-lg p-4">
-                          <div className="flex items-center space-x-4">
-                            <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-primary-foreground">
-                              {getFileIcon(previewFile.type)}
+                ) : (
+                  /* File Preview */
+                  <div className="max-w-lg mx-auto">
+                    <Card>
+                      <CardContent className="p-6">
+                        <div className="text-center mb-6">
+                          <h3 className="text-lg font-semibold text-foreground mb-2">File Preview</h3>
+                          <p className="text-sm text-muted-foreground">Review your file before uploading</p>
+                        </div>
+                        
+                        <div className="space-y-4">
+                          {/* Preview Content */}
+                          <div className="bg-secondary rounded-lg p-4">
+                            <div className="flex items-center space-x-4">
+                              <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-primary-foreground flex-shrink-0">
+                                {getFileIcon(previewFile.type)}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <h4 className="font-medium text-foreground text-overflow-ellipsis" data-testid="text-preview-filename" title={previewFile.name}>
+                                  {previewFile.name}
+                                </h4>
+                                <p className="text-sm text-muted-foreground" data-testid="text-preview-filesize">
+                                  {formatFileSize(previewFile.size)}
+                                </p>
+                              </div>
                             </div>
-                            <div className="flex-1">
-                              <h4 className="font-medium text-foreground" data-testid="text-preview-filename">
-                                {previewFile.name}
-                              </h4>
-                              <p className="text-sm text-muted-foreground" data-testid="text-preview-filesize">
-                                {formatFileSize(previewFile.size)}
+                            
+                            {/* Image Preview */}
+                            {previewUrl && (
+                              <div className="mt-4">
+                                <img 
+                                  src={previewUrl} 
+                                  alt="Preview" 
+                                  className="max-w-full h-32 object-cover rounded border mx-auto"
+                                  data-testid="img-preview"
+                                />
+                              </div>
+                            )}
+                          </div>
+                          
+                          {/* Action Buttons */}
+                          <div className="flex flex-col sm:flex-row gap-3">
+                            <Button 
+                              onClick={handleCancel} 
+                              variant="outline" 
+                              className="flex-1"
+                              data-testid="button-cancel-upload"
+                            >
+                              Cancel
+                            </Button>
+                            <Button 
+                              onClick={handleUpload} 
+                              className="flex-1" 
+                              disabled={uploadMutation.isPending}
+                              data-testid="button-confirm-upload"
+                            >
+                              {uploadMutation.isPending ? "Uploading..." : "Upload File"}
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
+                )}
+
+                {/* Upload Progress */}
+                {uploadProgress !== null && (
+                  <div className="mt-6 fade-in max-w-lg mx-auto" data-testid="upload-progress">
+                    <Card>
+                      <CardContent className="p-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium text-foreground text-overflow-ellipsis" data-testid="text-uploading-filename" title={uploadingFileName}>
+                            {uploadingFileName}
+                          </span>
+                          <span className="text-sm text-muted-foreground flex-shrink-0 ml-2" data-testid="text-upload-progress">
+                            {Math.round(uploadProgress)}%
+                          </span>
+                        </div>
+                        <Progress value={uploadProgress} className="h-2" data-testid="progress-upload" />
+                      </CardContent>
+                    </Card>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </section>
+
+          {/* Uploaded Files Section */}
+          <section className="mb-8">
+            <Card>
+              <CardContent className="p-6">
+                <h2 className="text-xl font-semibold text-foreground mb-6">Uploaded Files</h2>
+                
+                {isLoading ? (
+                  <div className="space-y-4">
+                    {[1, 2].map((i) => (
+                      <div key={i} className="bg-secondary rounded-lg p-4 animate-pulse">
+                        <div className="flex items-center space-x-4">
+                          <div className="w-10 h-10 bg-muted rounded-lg flex-shrink-0" />
+                          <div className="flex-1 space-y-2">
+                            <div className="h-4 bg-muted rounded w-48" />
+                            <div className="h-3 bg-muted rounded w-32" />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                ) : files.length === 0 ? (
+                  <div className="text-center py-12" data-testid="empty-state">
+                    <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+                      <FolderOpen className="h-8 w-8 text-muted-foreground" />
+                    </div>
+                    <p className="text-foreground font-medium mb-2">No files uploaded yet</p>
+                    <p className="text-muted-foreground">Upload files to start sharing</p>
+                  </div>
+                ) : (
+                  <div className="space-y-4" data-testid="files-list">
+                    {files.map((file) => (
+                      <div key={file.id} className="bg-secondary rounded-lg p-4 fade-in" data-testid={`card-file-${file.id}`}>
+                        <div className="flex items-center justify-between gap-4">
+                          <div className="flex items-center space-x-4 flex-1 min-w-0">
+                            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-primary-foreground flex-shrink-0">
+                              {getFileIcon(file.mimetype)}
+                            </div>
+                            <div className="min-w-0 flex-1">
+                              <h3 className="font-medium text-foreground text-overflow-ellipsis" data-testid={`text-filename-${file.id}`} title={file.originalName}>
+                                {file.originalName}
+                              </h3>
+                              <p className="text-sm text-muted-foreground">
+                                <span data-testid={`text-filesize-${file.id}`}>{formatFileSize(file.size)}</span> • 
+                                <span data-testid={`text-uploaded-time-${file.id}`}> {formatTimeAgo(file.uploadedAt)}</span>
                               </p>
                             </div>
                           </div>
-                          
-                          {/* Image Preview */}
-                          {previewUrl && (
-                            <div className="mt-4">
-                              <img 
-                                src={previewUrl} 
-                                alt="Preview" 
-                                className="max-w-full h-32 object-cover rounded border mx-auto"
-                                data-testid="img-preview"
-                              />
-                            </div>
-                          )}
+                          <div className="flex items-center space-x-2 flex-shrink-0">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => downloadFile(file.shareUrl)}
+                              data-testid={`button-download-${file.id}`}
+                            >
+                              <Download className="h-4 w-4" />
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => deleteMutation.mutate(file.id)}
+                              disabled={deleteMutation.isPending}
+                              data-testid={`button-delete-${file.id}`}
+                            >
+                              <Trash2 className="h-4 w-4 text-destructive" />
+                            </Button>
+                          </div>
                         </div>
                         
-                        {/* Action Buttons */}
-                        <div className="flex space-x-3">
-                          <Button 
-                            onClick={handleCancel} 
-                            variant="outline" 
-                            className="flex-1"
-                            data-testid="button-cancel-upload"
-                          >
-                            Cancel
-                          </Button>
-                          <Button 
-                            onClick={handleUpload} 
-                            className="flex-1" 
-                            disabled={uploadMutation.isPending}
-                            data-testid="button-confirm-upload"
-                          >
-                            {uploadMutation.isPending ? "Uploading..." : "Upload File"}
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              )}
-
-              {/* Upload Progress */}
-              {uploadProgress !== null && (
-                <div className="mt-6 fade-in" data-testid="upload-progress">
-                  <Card>
-                    <CardContent className="p-4">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-sm font-medium text-foreground" data-testid="text-uploading-filename">
-                          {uploadingFileName}
-                        </span>
-                        <span className="text-sm text-muted-foreground" data-testid="text-upload-progress">
-                          {Math.round(uploadProgress)}%
-                        </span>
-                      </div>
-                      <Progress value={uploadProgress} className="h-2" data-testid="progress-upload" />
-                    </CardContent>
-                  </Card>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </section>
-
-        {/* Uploaded Files Section */}
-        <section className="mb-8">
-          <Card>
-            <CardContent className="p-6">
-              <h2 className="text-xl font-semibold text-foreground mb-6">Uploaded Files</h2>
-              
-              {isLoading ? (
-                <div className="space-y-4">
-                  {[1, 2].map((i) => (
-                    <div key={i} className="bg-secondary rounded-lg p-4 animate-pulse">
-                      <div className="flex items-center space-x-4">
-                        <div className="w-10 h-10 bg-muted rounded-lg" />
-                        <div className="flex-1 space-y-2">
-                          <div className="h-4 bg-muted rounded w-48" />
-                          <div className="h-3 bg-muted rounded w-32" />
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : files.length === 0 ? (
-                <div className="text-center py-12" data-testid="empty-state">
-                  <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
-                    <FolderOpen className="h-8 w-8 text-muted-foreground" />
-                  </div>
-                  <p className="text-foreground font-medium mb-2">No files uploaded yet</p>
-                  <p className="text-muted-foreground">Upload files to start sharing</p>
-                </div>
-              ) : (
-                <div className="space-y-4" data-testid="files-list">
-                  {files.map((file) => (
-                    <div key={file.id} className="bg-secondary rounded-lg p-4 fade-in" data-testid={`card-file-${file.id}`}>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-4">
-                          <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-primary-foreground">
-                            {getFileIcon(file.mimetype)}
-                          </div>
-                          <div>
-                            <h3 className="font-medium text-foreground" data-testid={`text-filename-${file.id}`}>
-                              {file.originalName}
-                            </h3>
-                            <p className="text-sm text-muted-foreground">
-                              <span data-testid={`text-filesize-${file.id}`}>{formatFileSize(file.size)}</span> • 
-                              <span data-testid={`text-uploaded-time-${file.id}`}> {formatTimeAgo(file.uploadedAt)}</span>
-                            </p>
+                        <Separator className="my-4" />
+                        
+                        {/* Share Link Section */}
+                        <div className="space-y-2">
+                          <label className="text-sm font-medium text-foreground">Share Link</label>
+                          <div className="flex flex-col sm:flex-row gap-2">
+                            <Input
+                              value={`${window.location.origin}/api/files/download/${file.shareUrl}`}
+                              readOnly
+                              className="flex-1 text-overflow-ellipsis"
+                              data-testid={`input-share-url-${file.id}`}
+                            />
+                            <Button
+                              onClick={() => copyToClipboard(file.shareUrl, file.id)}
+                              className="flex items-center space-x-2 flex-shrink-0"
+                              data-testid={`button-copy-${file.id}`}
+                            >
+                              {copiedUrls.has(file.id) ? (
+                                <Check className="h-4 w-4" />
+                              ) : (
+                                <Copy className="h-4 w-4" />
+                              )}
+                              <span>{copiedUrls.has(file.id) ? "Copied!" : "Copy"}</span>
+                            </Button>
                           </div>
                         </div>
-                        <div className="flex items-center space-x-2">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => downloadFile(file.shareUrl)}
-                            data-testid={`button-download-${file.id}`}
-                          >
-                            <Download className="h-4 w-4" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => deleteMutation.mutate(file.id)}
-                            disabled={deleteMutation.isPending}
-                            data-testid={`button-delete-${file.id}`}
-                          >
-                            <Trash2 className="h-4 w-4 text-destructive" />
-                          </Button>
-                        </div>
                       </div>
-                      
-                      <Separator className="my-4" />
-                      
-                      {/* Share Link Section */}
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium text-foreground">Share Link</label>
-                        <div className="flex items-center space-x-2">
-                          <Input
-                            value={`${window.location.origin}/api/files/download/${file.shareUrl}`}
-                            readOnly
-                            className="flex-1"
-                            data-testid={`input-share-url-${file.id}`}
-                          />
-                          <Button
-                            onClick={() => copyToClipboard(file.shareUrl, file.id)}
-                            className="flex items-center space-x-2"
-                            data-testid={`button-copy-${file.id}`}
-                          >
-                            {copiedUrls.has(file.id) ? (
-                              <Check className="h-4 w-4" />
-                            ) : (
-                              <Copy className="h-4 w-4" />
-                            )}
-                            <span>{copiedUrls.has(file.id) ? "Copied!" : "Copy"}</span>
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-        </section>
-
-        {/* Info Section */}
-        <section>
-          <Card>
-            <CardContent className="p-6">
-              <h2 className="text-xl font-semibold text-foreground mb-4">How it works</h2>
-              <div className="grid md:grid-cols-3 gap-6">
-                <div className="text-center">
-                  <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Upload className="h-6 w-6 text-primary-foreground" />
+                    ))}
                   </div>
-                  <h3 className="font-medium text-foreground mb-2">1. Upload</h3>
-                  <p className="text-sm text-muted-foreground">Drag and drop or select files to upload</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Share className="h-6 w-6 text-primary-foreground" />
-                  </div>
-                  <h3 className="font-medium text-foreground mb-2">2. Share</h3>
-                  <p className="text-sm text-muted-foreground">Get a unique link for each uploaded file</p>
-                </div>
-                <div className="text-center">
-                  <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center mx-auto mb-3">
-                    <Download className="h-6 w-6 text-primary-foreground" />
-                  </div>
-                  <h3 className="font-medium text-foreground mb-2">3. Download</h3>
-                  <p className="text-sm text-muted-foreground">Recipients can download using the shared link</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </section>
-      </main>
+                )}
+              </CardContent>
+            </Card>
+          </section>
+        </main>
+      </div>
     </div>
   );
 }
