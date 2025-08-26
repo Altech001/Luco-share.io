@@ -3,24 +3,24 @@
 @tailwind utilities;
 
 :root {
-  --background: hsl(210, 25%, 8%);
-  --foreground: hsl(0, 0%, 95%);
-  --card: hsl(210, 20%, 12%);
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(222.2, 84%, 4.9%);
+  --card: hsl(0, 0%, 100%);
   --card-foreground: hsl(222.2, 84%, 4.9%);
   --popover: hsl(0, 0%, 100%);
   --popover-foreground: hsl(222.2, 84%, 4.9%);
   --primary: hsl(180, 90%, 45%);
   --primary-foreground: hsl(210, 40%, 98%);
-  --secondary: hsl(210, 20%, 15%);
+  --secondary: hsl(210, 40%, 96%);
   --secondary-foreground: hsl(222.2, 84%, 4.9%);
-  --muted: hsl(210, 20%, 18%);
+  --muted: hsl(210, 40%, 96%);
   --muted-foreground: hsl(215.4, 16.3%, 46.9%);
   --accent: hsl(210, 40%, 96%);
   --accent-foreground: hsl(222.2, 84%, 4.9%);
   --destructive: hsl(0, 84.2%, 60.2%);
   --destructive-foreground: hsl(210, 40%, 98%);
-  --border: hsl(210, 15%, 25%);
-  --input: hsl(210, 15%, 20%);
+  --border: hsl(214.3, 31.8%, 91.4%);
+  --input: hsl(214.3, 31.8%, 91.4%);
   --ring: hsl(221.2, 83.2%, 53.3%);
   --chart-1: hsl(221.2, 83.2%, 53.3%);
   --chart-2: hsl(159.7826, 100%, 36.0784%);
@@ -139,7 +139,7 @@
   height: 300px;
   border: 3px dashed hsl(180, 90%, 45%);
   border-radius: 50%;
-  background: radial-gradient(circle, hsl(210, 20%, 15%) 0%, hsl(210, 25%, 10%) 100%);
+  background: radial-gradient(circle, hsl(210, 15%, 95%) 0%, hsl(210, 20%, 90%) 100%);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -165,7 +165,7 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: white;
+  color: hsl(180, 90%, 45%);
   transition: all 0.3s ease;
   padding: 20px;
   text-align: center;
@@ -228,16 +228,24 @@
   margin-left: 300px;
 }
 
+.mobile-sidebar {
+  position: relative;
+  width: 100%;
+  border-right: none;
+  border-bottom: 1px solid hsl(var(--border));
+  order: -1;
+  padding: 1.5rem;
+}
+
 @media (max-width: 1024px) {
   .sidebar {
-    position: relative;
-    width: 100%;
-    border-right: none;
-    border-bottom: 1px solid hsl(var(--border));
+    display: none;
   }
   
   .main-content {
     margin-left: 0;
+    display: flex;
+    flex-direction: column;
   }
   
   .circular-dropzone {
@@ -260,5 +268,27 @@
     width: 36px;
     height: 36px;
     margin-bottom: 15px;
+  }
+}
+
+/* Preview page styles */
+.preview-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: hsl(var(--background));
+}
+
+.preview-card {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+@media (max-width: 640px) {
+  .preview-container {
+    padding: 1rem;
   }
 }

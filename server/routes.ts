@@ -71,6 +71,26 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get file info by share URL (for preview)
+  app.get("/api/files/info/:shareUrl", async (req, res) => {
+    try {
+      const { shareUrl } = req.params;
+      const file = await storage.getFileByShareUrl(shareUrl);
+      
+      if (!file) {
+        return res.status(404).json({ message: "File not found" });
+      }
+
+      res.json({
+        ...file,
+        uploadedAt: file.uploadedAt.toISOString(),
+      });
+    } catch (error) {
+      console.error("Get file info error:", error);
+      res.status(500).json({ message: "Failed to get file info" });
+    }
+  });
+
   // Download file by share URL
   app.get("/api/files/download/:shareUrl", async (req, res) => {
     try {

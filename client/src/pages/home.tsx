@@ -163,7 +163,7 @@ export default function Home() {
   });
 
   const copyToClipboard = async (shareUrl: string, fileId: string) => {
-    const fullUrl = `${window.location.origin}/api/files/download/${shareUrl}`;
+    const fullUrl = `${window.location.origin}/preview/${shareUrl}`;
     try {
       await navigator.clipboard.writeText(fullUrl);
       setCopiedUrls(prev => new Set(prev).add(fileId));
@@ -267,6 +267,48 @@ export default function Home() {
 
       {/* Main Content */}
       <div className="main-content flex-1">
+        {/* Mobile Sidebar */}
+        <div className="mobile-sidebar lg:hidden">
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+              <CloudUpload className="h-4 w-4 text-primary-foreground" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-foreground">FileShare</h1>
+              <p className="text-muted-foreground text-sm">Secure file transfer</p>
+            </div>
+          </div>
+
+          <Card>
+            <CardContent className="p-4">
+              <h2 className="text-lg font-semibold text-foreground mb-4">How it works</h2>
+              <div className="grid grid-cols-3 gap-4">
+                <div className="text-center">
+                  <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center mx-auto mb-2">
+                    <Upload className="h-4 w-4 text-primary-foreground" />
+                  </div>
+                  <h3 className="font-medium text-foreground mb-1 text-sm">1. Upload</h3>
+                  <p className="text-xs text-muted-foreground">Drag and drop files</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center mx-auto mb-2">
+                    <Share className="h-4 w-4 text-primary-foreground" />
+                  </div>
+                  <h3 className="font-medium text-foreground mb-1 text-sm">2. Share</h3>
+                  <p className="text-xs text-muted-foreground">Get unique link</p>
+                </div>
+                <div className="text-center">
+                  <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center mx-auto mb-2">
+                    <Download className="h-4 w-4 text-primary-foreground" />
+                  </div>
+                  <h3 className="font-medium text-foreground mb-1 text-sm">3. Download</h3>
+                  <p className="text-xs text-muted-foreground">Download via link</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         <main className="max-w-4xl mx-auto px-4 py-8">
           {/* Upload Section */}
           <section className="mb-8">
@@ -475,7 +517,7 @@ export default function Home() {
                           <label className="text-sm font-medium text-foreground">Share Link</label>
                           <div className="flex flex-col sm:flex-row gap-2">
                             <Input
-                              value={`${window.location.origin}/api/files/download/${file.shareUrl}`}
+                              value={`${window.location.origin}/preview/${file.shareUrl}`}
                               readOnly
                               className="flex-1 text-overflow-ellipsis"
                               data-testid={`input-share-url-${file.id}`}
