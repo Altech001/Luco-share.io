@@ -139,7 +139,7 @@
   height: 300px;
   border: 3px dashed hsl(180, 90%, 45%);
   border-radius: 50%;
-  background: radial-gradient(circle, hsl(210, 15%, 95%) 0%, hsl(210, 20%, 90%) 100%);
+  background: hsl(0, 0%, 97%);
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
@@ -249,25 +249,38 @@
   }
   
   .circular-dropzone {
-    width: 250px;
-    height: 250px;
+    width: 220px;
+    height: 220px;
+  }
+  
+  .mobile-sidebar {
+    padding: 1rem;
+  }
+  
+  .mobile-sidebar .grid {
+    gap: 2rem;
   }
 }
 
 @media (max-width: 640px) {
   .circular-dropzone {
-    width: 200px;
-    height: 200px;
+    width: 180px;
+    height: 180px;
   }
   
   .default-text {
-    font-size: 1rem;
+    font-size: 0.9rem;
+    padding: 0 10px;
   }
   
   .dropzone-icon {
-    width: 36px;
-    height: 36px;
-    margin-bottom: 15px;
+    width: 32px;
+    height: 32px;
+    margin-bottom: 12px;
+  }
+  
+  .browse-text {
+    font-size: 0.8rem;
   }
 }
 
@@ -290,5 +303,37 @@
 @media (max-width: 640px) {
   .preview-container {
     padding: 1rem;
+    align-items: flex-start;
+    padding-top: 2rem;
+  }
+  
+  .preview-card .grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+}
+
+/* Mobile responsive improvements */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 280px;
+  }
+  
+  .main-content {
+    padding: 0;
+  }
+  
+  .max-w-4xl {
+    max-width: 100%;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  .mobile-sidebar h1 {
+    font-size: 1.25rem;
+  }
+  
+  .mobile-sidebar h2 {
+    font-size: 1rem;
   }
 }

@@ -124,7 +124,7 @@ export default function Preview() {
                 </p>
                 <Button onClick={goHome} className="flex items-center space-x-2">
                   <ArrowLeft className="h-4 w-4" />
-                  <span>Go to FileShare</span>
+                  <span>Go to LucoShare.io</span>
                 </Button>
               </div>
             </CardContent>
@@ -145,7 +145,7 @@ export default function Preview() {
                 <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
                   <CloudUpload className="h-4 w-4 text-primary-foreground" />
                 </div>
-                <h1 className="text-xl font-bold text-foreground">FileShare</h1>
+                <h1 className="text-xl font-bold text-foreground">LucoShare.io</h1>
               </div>
               <h2 className="text-lg font-semibold text-foreground mb-2">File Preview</h2>
               <p className="text-muted-foreground">
@@ -206,7 +206,7 @@ export default function Preview() {
                     data-testid="button-go-home"
                   >
                     <ExternalLink className="h-4 w-4" />
-                    <span>Try FileShare yourself</span>
+                    <span>Try LucoShare.io yourself</span>
                   </Button>
                 </div>
               </div>

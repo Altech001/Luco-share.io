@@ -230,8 +230,8 @@ export default function Home() {
             <CloudUpload className="h-4 w-4 text-primary-foreground" />
           </div>
           <div>
-            <h1 className="text-xl font-bold text-foreground">FileShare</h1>
-            <p className="text-muted-foreground text-sm">Secure file transfer</p>
+            <h1 className="text-xl font-bold text-foreground">LucoShare.io</h1>
+            <p className="text-muted-foreground text-sm">Safe sharing of files</p>
           </div>
         </div>
 
@@ -274,8 +274,8 @@ export default function Home() {
               <CloudUpload className="h-4 w-4 text-primary-foreground" />
             </div>
             <div>
-              <h1 className="text-xl font-bold text-foreground">FileShare</h1>
-              <p className="text-muted-foreground text-sm">Secure file transfer</p>
+              <h1 className="text-xl font-bold text-foreground">LucoShare.io</h1>
+              <p className="text-muted-foreground text-sm">Safe sharing of files</p>
             </div>
           </div>
 
@@ -544,6 +544,13 @@ export default function Home() {
             </Card>
           </section>
         </main>
+        
+        {/* Footer */}
+        <footer className="text-center py-6 border-t border-border mt-8">
+          <p className="text-sm text-muted-foreground">
+            Made by <span className="font-medium text-foreground">Altech Technologies</span>
+          </p>
+        </footer>
       </div>
     </div>
   );
