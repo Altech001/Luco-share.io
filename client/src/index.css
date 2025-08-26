@@ -246,19 +246,21 @@
     margin-left: 0;
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
   }
   
   .circular-dropzone {
-    width: 220px;
-    height: 220px;
+    width: 200px;
+    height: 200px;
   }
   
   .mobile-sidebar {
     padding: 1rem;
+    flex-shrink: 0;
   }
   
   .mobile-sidebar .grid {
-    gap: 2rem;
+    gap: 1.5rem;
   }
 }
 
@@ -325,15 +327,116 @@
   
   .max-w-4xl {
     max-width: 100%;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+  
+  .mobile-sidebar {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
   }
   
   .mobile-sidebar h1 {
-    font-size: 1.25rem;
+    font-size: 1.1rem;
   }
   
   .mobile-sidebar h2 {
+    font-size: 0.9rem;
+  }
+  
+  .mobile-sidebar .grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+  }
+  
+  .mobile-sidebar .w-10 {
+    width: 2rem;
+    height: 2rem;
+  }
+  
+  .mobile-sidebar .text-sm {
+    font-size: 0.75rem;
+  }
+  
+  .mobile-sidebar .text-xs {
+    font-size: 0.65rem;
+  }
+}
+
+/* Extra small mobile devices */
+@media (max-width: 480px) {
+  .circular-dropzone {
+    width: 160px !important;
+    height: 160px !important;
+  }
+  
+  .default-text {
+    font-size: 0.8rem !important;
+    padding: 0 8px;
+  }
+  
+  .dropzone-icon {
+    width: 28px !important;
+    height: 28px !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .main-content {
+    padding: 0.5rem 0;
+  }
+  
+  .max-w-4xl {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  
+  .mobile-sidebar {
+    padding: 0.5rem;
+  }
+  
+  .mobile-sidebar h1 {
     font-size: 1rem;
+  }
+  
+  .mobile-sidebar .grid {
+    gap: 0.75rem;
+  }
+  
+  .mobile-sidebar .w-10 {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
+  
+  .mobile-sidebar .h-4 {
+    height: 0.75rem;
+    width: 0.75rem;
+  }
+}
+
+/* File preview mobile optimization */
+@media (max-width: 640px) {
+  .preview-card {
+    margin: 0;
+    width: 100%;
+  }
+  
+  .preview-card .p-6 {
+    padding: 1rem;
+  }
+  
+  .preview-card .space-y-4 > * + * {
+    margin-top: 1rem;
+  }
+  
+  .preview-card .bg-secondary {
+    padding: 0.75rem;
+  }
+  
+  .preview-card .text-lg {
+    font-size: 1rem;
+  }
+  
+  .preview-card .mb-6 {
+    margin-bottom: 1rem;
   }
 }

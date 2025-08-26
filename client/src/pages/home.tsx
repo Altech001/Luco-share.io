@@ -61,10 +61,10 @@ export default function Home() {
       const progressInterval = setInterval(() => {
         setUploadProgress(prev => {
           if (prev === null) return 0;
-          const newProgress = prev + Math.random() * 15;
-          return newProgress > 90 ? 90 : newProgress;
+          const newProgress = prev + Math.random() * 10;
+          return newProgress > 85 ? 85 : newProgress;
         });
-      }, 200);
+      }, 150);
 
       try {
         const response = await apiRequest("POST", "/api/files/upload", formData);
@@ -309,11 +309,11 @@ export default function Home() {
           </Card>
         </div>
 
-        <main className="max-w-4xl mx-auto px-4 py-8">
+        <main className="w-full mx-auto px-2 py-4 sm:px-4 sm:py-8 sm:max-w-4xl">
           {/* Upload Section */}
-          <section className="mb-8">
+          <section className="mb-6 sm:mb-8">
             <Card>
-              <CardContent className="p-8">
+              <CardContent className="p-4 sm:p-8">
                 
                 {/* Drag Drop Zone */}
                 {!previewFile ? (
@@ -350,33 +350,33 @@ export default function Home() {
                         )}
                       </div>
                     </div>
-                    <div className="mt-8 text-center">
-                      <h3 className="text-3xl font-bold mb-2 text-foreground">Drag & drop. It's online.</h3>
-                      <p className="text-muted-foreground">Maximum file size: 100MB</p>
+                    <div className="mt-6 sm:mt-8 text-center">
+                      <h3 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-2 text-foreground">Drag & drop. It's online.</h3>
+                      <p className="text-sm sm:text-base text-muted-foreground">Maximum file size: 100MB</p>
                     </div>
                   </div>
                 ) : (
                   /* File Preview */
-                  <div className="max-w-lg mx-auto">
+                  <div className="w-full max-w-lg mx-auto px-2 sm:px-0">
                     <Card>
-                      <CardContent className="p-6">
-                        <div className="text-center mb-6">
-                          <h3 className="text-lg font-semibold text-foreground mb-2">File Preview</h3>
-                          <p className="text-sm text-muted-foreground">Review your file before uploading</p>
+                      <CardContent className="p-4 sm:p-6">
+                        <div className="text-center mb-4 sm:mb-6">
+                          <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2">File Preview</h3>
+                          <p className="text-xs sm:text-sm text-muted-foreground">Review your file before uploading</p>
                         </div>
                         
-                        <div className="space-y-4">
+                        <div className="space-y-3 sm:space-y-4">
                           {/* Preview Content */}
-                          <div className="bg-secondary rounded-lg p-4">
-                            <div className="flex items-center space-x-4">
-                              <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-primary-foreground flex-shrink-0">
+                          <div className="bg-secondary rounded-lg p-3 sm:p-4">
+                            <div className="flex items-center space-x-3 sm:space-x-4">
+                              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-primary rounded-lg flex items-center justify-center text-primary-foreground flex-shrink-0">
                                 {getFileIcon(previewFile.type)}
                               </div>
                               <div className="flex-1 min-w-0">
-                                <h4 className="font-medium text-foreground text-overflow-ellipsis" data-testid="text-preview-filename" title={previewFile.name}>
+                                <h4 className="font-medium text-foreground text-overflow-ellipsis text-sm sm:text-base" data-testid="text-preview-filename" title={previewFile.name}>
                                   {previewFile.name}
                                 </h4>
-                                <p className="text-sm text-muted-foreground" data-testid="text-preview-filesize">
+                                <p className="text-xs sm:text-sm text-muted-foreground" data-testid="text-preview-filesize">
                                   {formatFileSize(previewFile.size)}
                                 </p>
                               </div>
@@ -396,18 +396,18 @@ export default function Home() {
                           </div>
                           
                           {/* Action Buttons */}
-                          <div className="flex flex-col sm:flex-row gap-3">
+                          <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
                             <Button 
                               onClick={handleCancel} 
                               variant="outline" 
-                              className="flex-1"
+                              className="flex-1 text-sm sm:text-base"
                               data-testid="button-cancel-upload"
                             >
                               Cancel
                             </Button>
                             <Button 
                               onClick={handleUpload} 
-                              className="flex-1" 
+                              className="flex-1 text-sm sm:text-base" 
                               disabled={uploadMutation.isPending}
                               data-testid="button-confirm-upload"
                             >
@@ -422,14 +422,14 @@ export default function Home() {
 
                 {/* Upload Progress */}
                 {uploadProgress !== null && (
-                  <div className="mt-6 fade-in max-w-lg mx-auto" data-testid="upload-progress">
+                  <div className="mt-4 sm:mt-6 fade-in w-full max-w-lg mx-auto px-2 sm:px-0" data-testid="upload-progress">
                     <Card>
-                      <CardContent className="p-4">
+                      <CardContent className="p-3 sm:p-4">
                         <div className="flex items-center justify-between mb-2">
-                          <span className="text-sm font-medium text-foreground text-overflow-ellipsis" data-testid="text-uploading-filename" title={uploadingFileName}>
+                          <span className="text-xs sm:text-sm font-medium text-foreground text-overflow-ellipsis" data-testid="text-uploading-filename" title={uploadingFileName}>
                             {uploadingFileName}
                           </span>
-                          <span className="text-sm text-muted-foreground flex-shrink-0 ml-2" data-testid="text-upload-progress">
+                          <span className="text-xs sm:text-sm text-muted-foreground flex-shrink-0 ml-2" data-testid="text-upload-progress">
                             {Math.round(uploadProgress)}%
                           </span>
                         </div>
@@ -443,10 +443,10 @@ export default function Home() {
           </section>
 
           {/* Uploaded Files Section */}
-          <section className="mb-8">
+          <section className="mb-6 sm:mb-8">
             <Card>
-              <CardContent className="p-6">
-                <h2 className="text-xl font-semibold text-foreground mb-6">Uploaded Files</h2>
+              <CardContent className="p-4 sm:p-6">
+                <h2 className="text-lg sm:text-xl font-semibold text-foreground mb-4 sm:mb-6">Uploaded Files</h2>
                 
                 {isLoading ? (
                   <div className="space-y-4">
@@ -473,30 +473,31 @@ export default function Home() {
                 ) : (
                   <div className="space-y-4" data-testid="files-list">
                     {files.map((file) => (
-                      <div key={file.id} className="bg-secondary rounded-lg p-4 fade-in" data-testid={`card-file-${file.id}`}>
-                        <div className="flex items-center justify-between gap-4">
-                          <div className="flex items-center space-x-4 flex-1 min-w-0">
-                            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-primary-foreground flex-shrink-0">
+                      <div key={file.id} className="bg-secondary rounded-lg p-3 sm:p-4 fade-in" data-testid={`card-file-${file.id}`}>
+                        <div className="flex items-center justify-between gap-2 sm:gap-4">
+                          <div className="flex items-center space-x-3 sm:space-x-4 flex-1 min-w-0">
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-primary rounded-lg flex items-center justify-center text-primary-foreground flex-shrink-0">
                               {getFileIcon(file.mimetype)}
                             </div>
                             <div className="min-w-0 flex-1">
-                              <h3 className="font-medium text-foreground text-overflow-ellipsis" data-testid={`text-filename-${file.id}`} title={file.originalName}>
+                              <h3 className="font-medium text-foreground text-overflow-ellipsis text-sm sm:text-base" data-testid={`text-filename-${file.id}`} title={file.originalName}>
                                 {file.originalName}
                               </h3>
-                              <p className="text-sm text-muted-foreground">
+                              <p className="text-xs sm:text-sm text-muted-foreground">
                                 <span data-testid={`text-filesize-${file.id}`}>{formatFileSize(file.size)}</span> • 
                                 <span data-testid={`text-uploaded-time-${file.id}`}> {formatTimeAgo(file.uploadedAt)}</span>
                               </p>
                             </div>
                           </div>
-                          <div className="flex items-center space-x-2 flex-shrink-0">
+                          <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
                             <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => downloadFile(file.shareUrl)}
                               data-testid={`button-download-${file.id}`}
+                              className="h-8 w-8 p-0 sm:h-9 sm:w-9"
                             >
-                              <Download className="h-4 w-4" />
+                              <Download className="h-3 w-3 sm:h-4 sm:w-4" />
                             </Button>
                             <Button
                               variant="ghost"
@@ -504,33 +505,34 @@ export default function Home() {
                               onClick={() => deleteMutation.mutate(file.id)}
                               disabled={deleteMutation.isPending}
                               data-testid={`button-delete-${file.id}`}
+                              className="h-8 w-8 p-0 sm:h-9 sm:w-9"
                             >
-                              <Trash2 className="h-4 w-4 text-destructive" />
+                              <Trash2 className="h-3 w-3 sm:h-4 sm:w-4 text-destructive" />
                             </Button>
                           </div>
                         </div>
                         
-                        <Separator className="my-4" />
+                        <Separator className="my-3 sm:my-4" />
                         
                         {/* Share Link Section */}
                         <div className="space-y-2">
-                          <label className="text-sm font-medium text-foreground">Share Link</label>
-                          <div className="flex flex-col sm:flex-row gap-2">
+                          <label className="text-xs sm:text-sm font-medium text-foreground">Share Link</label>
+                          <div className="flex flex-col gap-2 sm:flex-row">
                             <Input
                               value={`${window.location.origin}/preview/${file.shareUrl}`}
                               readOnly
-                              className="flex-1 text-overflow-ellipsis"
+                              className="flex-1 text-overflow-ellipsis text-xs sm:text-sm"
                               data-testid={`input-share-url-${file.id}`}
                             />
                             <Button
                               onClick={() => copyToClipboard(file.shareUrl, file.id)}
-                              className="flex items-center space-x-2 flex-shrink-0"
+                              className="flex items-center justify-center space-x-2 flex-shrink-0 text-xs sm:text-sm"
                               data-testid={`button-copy-${file.id}`}
                             >
                               {copiedUrls.has(file.id) ? (
-                                <Check className="h-4 w-4" />
+                                <Check className="h-3 w-3 sm:h-4 sm:w-4" />
                               ) : (
-                                <Copy className="h-4 w-4" />
+                                <Copy className="h-3 w-3 sm:h-4 sm:w-4" />
                               )}
                               <span>{copiedUrls.has(file.id) ? "Copied!" : "Copy"}</span>
                             </Button>
