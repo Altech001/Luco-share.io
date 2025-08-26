@@ -38,6 +38,8 @@ export default function Home() {
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [uploadingFileName, setUploadingFileName] = useState<string>("");
   const [copiedUrls, setCopiedUrls] = useState<Set<string>>(new Set());
+  const [previewFile, setPreviewFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
@@ -122,9 +124,37 @@ export default function Home() {
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
-      uploadMutation.mutate(acceptedFiles[0]);
+      const file = acceptedFiles[0];
+      setPreviewFile(file);
+      
+      // Create preview URL for images
+      if (file.type.startsWith('image/')) {
+        const url = URL.createObjectURL(file);
+        setPreviewUrl(url);
+      } else {
+        setPreviewUrl(null);
+      }
     }
-  }, [uploadMutation]);
+  }, []);
+  
+  const handleUpload = () => {
+    if (previewFile) {
+      uploadMutation.mutate(previewFile);
+      setPreviewFile(null);
+      if (previewUrl) {
+        URL.revokeObjectURL(previewUrl);
+        setPreviewUrl(null);
+      }
+    }
+  };
+  
+  const handleCancel = () => {
+    setPreviewFile(null);
+    if (previewUrl) {
+      URL.revokeObjectURL(previewUrl);
+      setPreviewUrl(null);
+    }
+  };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
@@ -216,32 +246,109 @@ export default function Home() {
               <h2 className="text-xl font-semibold text-foreground mb-6">Upload Files</h2>
               
               {/* Drag Drop Zone */}
-              <div
-                {...getRootProps()}
-                className={cn(
-                  "border-2 border-dashed border-border rounded-lg p-12 text-center transition-all duration-200 cursor-pointer",
-                  isDragActive && "border-primary bg-accent",
-                  "hover:border-primary hover:bg-accent"
-                )}
-                data-testid="drop-zone"
-              >
-                <input {...getInputProps()} data-testid="file-input" />
-                <div className="flex flex-col items-center space-y-4">
-                  <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center">
-                    <CloudUpload className="h-8 w-8 text-muted-foreground" />
+              {!previewFile ? (
+                <div className="flex flex-col items-center">
+                  <div
+                    {...getRootProps()}
+                    className={cn(
+                      "circular-dropzone mx-auto cursor-pointer",
+                      isDragActive && "drag-active"
+                    )}
+                    data-testid="drop-zone"
+                  >
+                    <input {...getInputProps()} data-testid="file-input" />
+                    <div className="dropzone-content">
+                      {isDragActive ? (
+                        <>
+                          <div className="dropzone-icon">
+                            <File className="w-12 h-12" />
+                          </div>
+                          <div className="drag-active-text">Drop it</div>
+                        </>
+                      ) : (
+                        <>
+                          <div className="dropzone-icon">
+                            <FolderOpen className="w-12 h-12" />
+                          </div>
+                          <div className="default-text">
+                            Drag and drop your files here.
+                          </div>
+                          <div className="browse-text">
+                            Or, browse to upload.
+                          </div>
+                        </>
+                      )}
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-lg font-medium text-foreground mb-2">
-                      Drag and drop files here
-                    </p>
-                    <p className="text-muted-foreground mb-4">or click to browse</p>
-                    <Button data-testid="button-choose-files">
-                      Choose Files
-                    </Button>
+                  <div className="mt-8">
+                    <h3 className="text-3xl font-bold text-center mb-2">Drag & drop. It's online.</h3>
+                    <p className="text-center text-muted-foreground">Maximum file size: 100MB</p>
                   </div>
-                  <p className="text-sm text-muted-foreground">Maximum file size: 100MB</p>
                 </div>
-              </div>
+              ) : (
+                /* File Preview */
+                <div className="max-w-md mx-auto">
+                  <Card>
+                    <CardContent className="p-6">
+                      <div className="text-center mb-6">
+                        <h3 className="text-lg font-semibold text-foreground mb-2">File Preview</h3>
+                        <p className="text-sm text-muted-foreground">Review your file before uploading</p>
+                      </div>
+                      
+                      <div className="space-y-4">
+                        {/* Preview Content */}
+                        <div className="bg-secondary rounded-lg p-4">
+                          <div className="flex items-center space-x-4">
+                            <div className="w-12 h-12 bg-primary rounded-lg flex items-center justify-center text-primary-foreground">
+                              {getFileIcon(previewFile.type)}
+                            </div>
+                            <div className="flex-1">
+                              <h4 className="font-medium text-foreground" data-testid="text-preview-filename">
+                                {previewFile.name}
+                              </h4>
+                              <p className="text-sm text-muted-foreground" data-testid="text-preview-filesize">
+                                {formatFileSize(previewFile.size)}
+                              </p>
+                            </div>
+                          </div>
+                          
+                          {/* Image Preview */}
+                          {previewUrl && (
+                            <div className="mt-4">
+                              <img 
+                                src={previewUrl} 
+                                alt="Preview" 
+                                className="max-w-full h-32 object-cover rounded border mx-auto"
+                                data-testid="img-preview"
+                              />
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* Action Buttons */}
+                        <div className="flex space-x-3">
+                          <Button 
+                            onClick={handleCancel} 
+                            variant="outline" 
+                            className="flex-1"
+                            data-testid="button-cancel-upload"
+                          >
+                            Cancel
+                          </Button>
+                          <Button 
+                            onClick={handleUpload} 
+                            className="flex-1" 
+                            disabled={uploadMutation.isPending}
+                            data-testid="button-confirm-upload"
+                          >
+                            {uploadMutation.isPending ? "Uploading..." : "Upload File"}
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
 
               {/* Upload Progress */}
               {uploadProgress !== null && (

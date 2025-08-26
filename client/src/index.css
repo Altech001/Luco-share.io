@@ -9,7 +9,7 @@
   --card-foreground: hsl(222.2, 84%, 4.9%);
   --popover: hsl(0, 0%, 100%);
   --popover-foreground: hsl(222.2, 84%, 4.9%);
-  --primary: hsl(221.2, 83.2%, 53.3%);
+  --primary: hsl(180, 90%, 45%);
   --primary-foreground: hsl(210, 40%, 98%);
   --secondary: hsl(210, 40%, 96%);
   --secondary-foreground: hsl(222.2, 84%, 4.9%);
@@ -58,7 +58,7 @@
   --card-foreground: hsl(0, 0%, 85.0980%);
   --popover: hsl(0, 0%, 0%);
   --popover-foreground: hsl(200, 6.6667%, 91.1765%);
-  --primary: hsl(221.2, 83.2%, 53.3%);
+  --primary: hsl(180, 90%, 45%);
   --primary-foreground: hsl(210, 40%, 98%);
   --secondary: hsl(195.0000, 15.3846%, 94.9020%);
   --secondary-foreground: hsl(222.2, 84%, 4.9%);
@@ -131,4 +131,58 @@
   0% { transform: scale(1); }
   50% { transform: scale(1.05); }
   100% { transform: scale(1); }
+}
+
+/* Circular dropzone styles */
+.circular-dropzone {
+  width: 300px;
+  height: 300px;
+  border: 3px dashed hsl(180, 90%, 45%);
+  border-radius: 50%;
+  background: transparent;
+  transition: all 0.3s ease;
+}
+
+.circular-dropzone.drag-active {
+  background: hsl(180, 90%, 45%);
+  border-color: hsl(180, 90%, 45%);
+}
+
+.circular-dropzone.drag-active .dropzone-content {
+  color: white;
+}
+
+.dropzone-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  color: hsl(180, 90%, 45%);
+  transition: all 0.3s ease;
+}
+
+.dropzone-icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: 20px;
+}
+
+.drag-active-text {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.default-text {
+  font-size: 1.1rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.browse-text {
+  font-size: 0.9rem;
+  opacity: 0.8;
+  text-decoration: underline;
 }
