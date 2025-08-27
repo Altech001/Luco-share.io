@@ -313,7 +313,7 @@ export default function Home() {
           </div>
         </div>
 
-        <Card>
+        <Card className="shadow-none border-dashed">
           <CardContent className="p-6">
             <h2 className="text-lg font-semibold text-foreground mb-4">How it works</h2>
             <div className="space-y-6">
@@ -357,7 +357,7 @@ export default function Home() {
             </div>
           </div>
 
-          <Card>
+          <Card className="shadow-none border-dashed">
             <CardContent className="p-4">
               <h2 className="text-lg font-semibold text-foreground mb-4">How it works</h2>
               <div className="grid grid-cols-3 gap-4">
@@ -481,7 +481,7 @@ export default function Home() {
                               <FolderOpen className="w-12 h-12" />
                             </div>
                             <div className="default-text sm:text-xs md:text-sm">
-                              Drag and drop your project output folder here.
+                              Drag and drop your files here.
                             </div>
                             <div className="browse-text text-blue-500 sm:text-xs md:text-sm">
                               Or, browse to upload.
@@ -498,7 +498,7 @@ export default function Home() {
                 ) : (
                   /* File Preview */
                   <div className="w-full max-w-lg mx-auto px-2 sm:px-0">
-                    <Card>
+                    <Card className="shadow-none border-dashed">
                       <CardContent className="p-4 sm:p-6">
                         <div className="text-center mb-4 sm:mb-6">
                           <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2">File Preview</h3>
@@ -780,7 +780,7 @@ export default function Home() {
       </div>
       <div className="sidebar-desktop hidden lg:block w-80 p-4 sticky">
            {/* Chat/Request Section for Desktop */}
-        <Card className="mt-6">
+        <Card className="mt-6 shadow-none border-dashed">
           <CardContent className="p-6">
             <div className="flex items-center space-x-2 mb-4">
               <MessageCircle className="h-5 w-5 text-primary" />

@@ -26,7 +26,7 @@ const UserLocation = () => {
   }, [latitude, longitude]);
 
   return (
-    <Card className=" p-4 border-t border-dashed shadow-none">
+    <Card className=" p-6 border-t border-dashed shadow-none">
       <CardContent className="p-6">
         <div className="flex items-center space-x-2 mb-3">
           <MapPin className="h-5 w-5 text-primary" />
